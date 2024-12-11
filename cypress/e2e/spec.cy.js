@@ -68,4 +68,78 @@ describe('TODOMvc App', () => {
       .children()
       .should('have.length', 2);
   });
+
+  it('Insere e conclui uma tarefa', () => {
+    cy.visit('');
+
+    cy.get('[data-cy=todo-input]')
+      .type('Prova de teoria dos grafos{enter}');
+
+    cy.get('[data-cy=todos-list]')
+      .children()
+      .should('have.length', 1);
+
+    cy.get('[data-cy=todos-list] > li [data-cy=toggle-todo-checkbox]')
+      .first()
+      .click();
+  });
+
+  it('Conclui várias tarefas e remove todas as concluídas', () => {
+    cy.visit('');
+
+    cy.get('[data-cy=todo-input]')
+      .type('Prova 2 de teoria dos grafos{enter}')
+      .type('Prova 2 de ES{enter}')
+      .type('Lista de Linguagens de Programação{enter}');
+
+    cy.get('[data-cy=todos-list]')
+      .children()
+      .should('have.length', 3);
+
+    cy.get('[data-cy=todos-list] > li [data-cy=toggle-todo-checkbox]')
+      .first()
+      .click();
+    
+    cy.get('[data-cy=filter-active-link')
+      .click();
+
+    cy.get('[data-cy=todos-list] > li [data-cy=toggle-todo-checkbox]')
+      .first()
+      .click();
+    
+    cy.get('[data-cy=filter-all-link]')
+      .click();
+
+    cy.get('[data-cy=todos-list]')
+      .children()
+      .should('have.length', 3);
+    
+    cy.get('[class=clear-completed]')
+      .click();
+
+    cy.get('[data-cy=todos-list]')
+      .children()
+      .should('have.length', 1);
+  });
+
+  it('Testa a ordem de inserção', () => {
+    cy.visit('');
+
+    cy.get('[data-cy=todo-input]')
+     .type('Prova 2 de teoria dos grafos{enter}')
+     .type('Prova 2 de ES{enter}');
+
+    cy.get('[data-cy=todos-list] > li [data-cy=toggle-todo-checkbox]')
+      .first()
+      .click();
+
+    cy.get('[class=clear-completed]')
+      .click();
+
+    cy.get('[data-cy=todos-list]')
+      .children()
+      .should('have.length', 1)
+      .first()
+      .should('have.text', 'Prova 2 de ES');
+  });
 });
